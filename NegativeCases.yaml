@@ -1,0 +1,30 @@
+# Description: Cell imbalance detection process for ticket analysis
+description: 'Cell imbalance detection'
+
+# Provider configuration: Reference to the agent that handles ticket-related tasks
+providers:
+  - id: 'file://../../agent_provider.py:call_agent'  # Path to the agent provider file (this may change)
+    label: 'Call Agent'
+
+# Prompts used for interacting with the agent
+prompts:
+  - 'Summarise ticket {{ticket_id}}'  # Summarize the ticket based on ticket ID (ticket_id will change)
+  - 'What actions were taken in response to ticket {{ticket_id}}?'  # Query for actions taken related to the ticket
+  - 'Generate a brief report on incident ticket {{ticket_id}}'  # Generate a report for the given ticket ID
+
+# Test cases with dynamic ticket IDs
+tests:
+  - vars:
+      ticket_id: 309361  # Sample ticket ID (this will change depending on the test case)
+  - vars:
+      ticket_id: 302844  # Another sample ticket ID (dynamic)
+  - vars:
+      ticket_id: 304388  # Another ticket ID (this can change)
+  - vars:
+      ticket_id: 303161  # Another ticket ID (this will vary)
+
+# Default test to validate the response from the agent
+defaultTest:
+  assert:
+    - type: iconcontains-any  # Validation to check if any of the listed terms are in the response
+      value: ["cell imbalance",]()
