@@ -1,0 +1,41 @@
+# Description of the scenario or test suite
+description: 'Incident reported on specific date'
+
+# Providers define where the agent or function call comes from
+providers:
+  - id: 'file://../agent_provider.py:call_agent'   # Path to the agent provider
+    label: 'Call Agent'                             # Display label
+
+# Prompts used to query the agent
+prompts:
+  - 'What is the date of ticket {{ticket_id}}?'
+  - 'When was ticket {{ticket_id}} logged?'
+  - 'What is the date of ticket {{ticket_id}}?'
+  - 'When does the case is finished {{ticket_id}}?'
+
+# Test variables — you can add or remove ticket IDs here
+tests:
+  - vars:
+      ticket_id: 309361
+  - vars:
+      ticket_id: 302844
+  - vars:
+      ticket_id: 304388
+  - vars:
+      ticket_id: 303161
+
+# Default test assertions — these define what MUST NOT appear in the output
+defaultTest:
+  assert:
+    - type: icontains-any      # Case-insensitive negative match
+      value: [
+        "available",
+        "cannot",
+        "do not have",
+        "not",
+        "have",
+        "no",
+        "I don't know",
+        "know",
+        "I do not know"
+      ]
