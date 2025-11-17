@@ -1,0 +1,42 @@
+# Description of the test suite
+description: 'Troubleshooting / solution request scenarios'
+
+# Provider definition — determines which agent/function processes the prompts
+providers:
+  - id: 'file://../agent_provider.py:call_agent'   # Path to agent provider
+    label: 'Call Agent'
+
+# Default prompt template for troubleshooting requests
+prompts:
+  - 'Provide troubleshooting steps for ticket {{ticket_id}}'
+
+tests:
+  # Test case for ticket 304432
+  - prompt: 'Provide troubleshooting steps for ticket {{ticket_id}}'
+    vars:
+      ticket_id: 304432
+    assert:
+      - type: icontains-any         # Ensures these words DO NOT appear
+        value: ['step', 'steps', 'solution', 'troubleshoot']
+
+  # Test case for ticket 309852
+  - prompt: 'Provide troubleshooting steps for ticket {{ticket_id}}'
+    vars:
+      ticket_id: 309852
+    assert:
+      - type: icontains-any
+        value: ['step', 'steps', 'solution', 'troubleshoot']
+
+  # Freshdesk ticket without ERP association
+  - prompt: 'Provide troubleshooting steps for ticket {{ticket_id}}'
+    vars:
+      ticket_id: 305537
+    assert:
+      - type: icontains-any
+        value: ['step', 'steps', 'solution', 'troubleshoot', 'System model is required']
+
+# Default test that applies to all tests above unless overridden
+defaultTest:
+  assert:
+    - type: not-contains
+      value: AI language model     # Ensures the agent does NOT say this phrase
