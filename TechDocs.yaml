@@ -1,0 +1,37 @@
+# Description of the test suite
+description: 'Technical documentation queries (system model only)'
+
+# Provider configuration — defines which agent/function will handle the prompts
+providers:
+  - id: 'file://../agent_provider.py:call_agent'   # Path to the provider
+    label: 'Call Agent'                             # Display label
+
+# Main prompt template used for each test
+prompts:
+  - 'What is the operating temperature range for model {{system_model}}?'
+
+# Test with supported and unsupported system models
+tests:
+  # Test case for model HVM
+  - prompt: 'What is the operating temperature range for model {{system_model}}?'
+    vars:
+      system_model: HVM
+    assert:
+      - type: icontains-any          # Ensures the model does NOT output these
+        value: ['-10', '+50', 'temperature']
+
+  # Test case for model HVS
+  - prompt: 'What is the operating temperature range for model {{system_model}}?'
+    vars:
+      system_model: HVS
+    assert:
+      - type: icontains-any
+        value: ['-10', '+50', 'temperature']
+
+  # Example extra test (from the screenshot, the next line starts but is cut)
+  - prompt: 'What is the operating temperature range for model {{system_model}}?'
+    vars:
+      system_model: ???    # You can replace this with any model name
+    assert:
+      - type: icontains-any
+        value: ['-10', '+50', 'temperature']
