@@ -1,0 +1,33 @@
+# Description: Incomplete data entry detection for ticket analysis
+description: 'Incomplete data entry'
+
+# Provider configuration: Reference to the agent responsible for handling ticket-related tasks
+providers:
+  - id: 'file://../../agent_provider.py:call_agent'  # Path to the agent provider file (this may change)
+    label: 'Call Agent'
+
+# Prompts used for interacting with the agent
+prompts:
+  - 'Summarise ticket {{ticket_id}}'  # Summarize the ticket based on ticket ID (ticket_id will change)
+  - 'Provide a detailed summary of incident ticket {{ticket_id}}'  # Detailed summary prompt
+  - 'Give a concise overview of the issue reported in ticket {{ticket_id}}'  # Concise issue overview
+  - 'What is the status and description of ticket {{ticket_id}}?'  # Ticket status and description query
+
+# Test cases with dynamic ticket IDs
+tests:
+  - vars:
+      ticket_id: 309361  # Sample ticket ID (this will change depending on the test case)
+  - vars:
+      ticket_id: 302844  # Another sample ticket ID (dynamic)
+  - vars:
+      ticket_id: 304388  # Another ticket ID (this can change)
+  - vars:
+      ticket_id: 303161  # Another ticket ID (this will vary)
+
+# Default test to validate the response from the agent
+defaultTest:
+  assert:
+    - type: iconcontains-any  # Validation to check if any of the listed terms are in the response
+      value: ["concerns", "about", "corresponds", "correspond", "corresponding"]
+    - type: iconcontains-any  # Ensures the response does not include unwanted terms
+      value: ["cannot", "no information", "not enough", "not included", "includes", "include", "no", "corresponding to"]
